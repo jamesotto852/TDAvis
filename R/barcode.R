@@ -155,7 +155,7 @@ StatBarcode <-  ggproto(
 stat_barcode <- function(mapping = NULL, data = NULL,
                          geom = "barcode", position = "identity",
                          ...,
-                         k = k,
+                         k = 1,
                          point_cloud = NULL,
                          na.rm = FALSE,
                          show.legend = NA,
