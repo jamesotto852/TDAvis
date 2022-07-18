@@ -1,6 +1,6 @@
 #' Title
 #'
-#' Compute persistence homologies and plot barcode plots.
+#' Compute persistence homologies and plot as barcode charts and persistence diagrams.
 #' Accepts either a singular point cloud of arbitrary dimension via the `point_cloud` argument
 #' or several, via the `point_data` aesthetic mapping.
 #'
@@ -30,8 +30,8 @@
 #' @param k
 #' @param point_cloud
 #'
-#' @name geom_barcode
-#' @rdname geom_barcode
+#' @name geom_persistence
+#' @rdname geom_persistence
 #' @export
 #'
 #' @examples
@@ -49,6 +49,11 @@
 #'   geom_barcode(point_cloud = df) +
 #'   scale_color_viridis_d(end = .6)
 #'
+#' ggplot() +
+#'   geom_persistence(point_cloud = df) +
+#'   geom_abline(intercept = 0, slope = 1) +
+#'   coord_fixed() +
+#'   scale_color_viridis_d(end = .6)
 #'
 #' # Visualizing multiple groups together
 #' # making use of point_data aesthetic mapping
@@ -66,20 +71,31 @@
 #' df_nested <- dplyr::group_by(df_mix, lab)
 #' df_nested <- tidyr::nest(df_nested)
 #'
-#' ggplot() +
-#'   geom_barcode(data = df_nested, aes(point_data = data)) +
+#' ggplot(df_nested) +
+#'   geom_barcode(aes(point_data = data)) +
 #'   facet_wrap(vars(lab)) +
+#'   scale_color_viridis_d(end = .6)
+#'
+#' ggplot(df_nested) +
+#'   geom_persistence(aes(point_data = data)) +
+#'   geom_abline(intercept = 0, slope = 1) +
+#'   coord_fixed() +
+#'   facet_wrap(vars(lab)) +
+#'   scale_color_viridis_d(end = .6)
+#'
+#' ggplot(df_nested) +
+#'   geom_persistence(aes(point_data = data, shape = lab), size = 3) +
+#'   geom_abline(intercept = 0, slope = 1) +
+#'   coord_fixed() +
 #'   scale_color_viridis_d(end = .6)
 NULL
 
-#' @rdname geom_barcode
+#' @rdname geom_persistence
 #' @export
-StatBarcode <-  ggproto(
-  "StatBarcode", Stat,
+StatPersistence <-  ggproto(
+  "StatPersistence", Stat,
 
-  default_aes = aes(x = after_stat(birth), xend = after_stat(death),
-                    y = after_stat(feature_id), yend = after_stat(feature_id),
-                    color = after_stat(dim)),
+  default_aes = aes(x = after_stat(birth), y = after_stat(death), color = after_stat(dim)),
 
   optional_aes = c("point_data"),
 
@@ -150,7 +166,90 @@ StatBarcode <-  ggproto(
 )
 
 
-#' @rdname geom_barcode
+#' @rdname geom_persistence
+#' @export
+stat_persistence <- function(mapping = NULL, data = NULL,
+                             geom = "persistence", position = "identity",
+                             ...,
+                             k = 1,
+                             point_cloud = NULL,
+                             na.rm = FALSE,
+                             show.legend = NA,
+                             inherit.aes = TRUE) {
+
+  if (is.null(data)) data <- ensure_nonempty_data
+
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatPersistence,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      k = k,
+      point_cloud = point_cloud,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+
+
+#' @rdname geom_persistence
+#' @export
+GeomPersistence <-  ggproto(
+  "GeomPersistence", GeomPoint,
+  optional_aes = c("point_data")
+)
+
+
+#' @rdname geom_persistence
+#' @export
+geom_persistence <- function(mapping = NULL, data = NULL,
+                             stat = "persistence", position = "identity",
+                             ...,
+                             na.rm = FALSE,
+                             show.legend = NA,
+                             inherit.aes = TRUE) {
+
+  if (is.null(data)) data <- ensure_nonempty_data
+
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = stat,
+    geom = GeomPersistence,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+
+
+
+
+# Barcode charts ----------------------------------------------------------
+# inherits computations from StatPersistence
+
+#' @rdname geom_persistence
+#' @export
+StatBarcode <-  ggproto(
+  "StatBarcode", StatPersistence,
+
+  default_aes = aes(x = after_stat(birth), xend = after_stat(death),
+                    y = after_stat(feature_id), yend = after_stat(feature_id),
+                    color = after_stat(dim))
+
+)
+
+
+#' @rdname geom_persistence
 #' @export
 stat_barcode <- function(mapping = NULL, data = NULL,
                          geom = "barcode", position = "identity",
@@ -181,7 +280,7 @@ stat_barcode <- function(mapping = NULL, data = NULL,
 }
 
 
-#' @rdname geom_barcode
+#' @rdname geom_persistence
 #' @export
 GeomBarcode <-  ggproto(
   "GeomBarcode", GeomSegment,
@@ -189,7 +288,7 @@ GeomBarcode <-  ggproto(
 )
 
 
-#' @rdname geom_barcode
+#' @rdname geom_persistence
 #' @export
 geom_barcode <- function(mapping = NULL, data = NULL,
                          stat = "barcode", position = "identity",
@@ -214,3 +313,4 @@ geom_barcode <- function(mapping = NULL, data = NULL,
     )
   )
 }
+
