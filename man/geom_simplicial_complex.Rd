@@ -7,14 +7,7 @@
 \alias{stat_simplicial_complex}
 \alias{GeomSimplicialComplex}
 \title{Simplicial complexes from 2-d point clouds}
-\format{
-An object of class \code{StatSimplicialComplex} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
-
-An object of class \code{GeomSimplicialComplex} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 6.
-}
 \usage{
-StatSimplicialComplex
-
 stat_simplicial_complex(
   mapping = NULL,
   data = NULL,
@@ -29,8 +22,6 @@ stat_simplicial_complex(
   inherit.aes = TRUE,
   ...
 )
-
-GeomSimplicialComplex
 
 geom_simplicial_complex(
   mapping = NULL,
@@ -82,6 +73,12 @@ a warning. If \code{TRUE}, missing values are silently removed.}
 It can also be a named logical vector to finely select the aesthetics to
 display.}
 
+\item{radius, diameter}{The radius or diameter used to construct the simplicial complex}
+
+\item{k}{The maximal dimension}
+
+\item{complex}{The type of complex to compute (currently, only \code{"Rips"} is implemented)}
+
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
@@ -95,10 +92,17 @@ to the paired geom/stat.}
 \item{stat}{The statistical transformation to use on the data for this
 layer, as a string.}
 
-\item{simplex_boundary}{}
+\item{zero_skeleton}{Should the 0-skeleton be plotted (as points)?}
+
+\item{one_skeleton}{Should the 1-skeleton be plotted (as line segments)?}
+
+\item{simplexes}{Should the >0-simplexes corresponding to the maximal complex
+be plotted (as polygons and line segments)?}
+
+\item{simplex_boundary}{Should the boundaries of polygons representing the simplexes be drawn?}
 }
 \description{
-Compute and plot simplicicial complexes for a specified radius or diameter...
+Compute and plot simplicicial complexes for a specified radius or diameter.
 }
 \section{Aesthetics}{
  geom_hdr understands the following aesthetics (required
@@ -106,6 +110,9 @@ aesthetics are in bold):
 \itemize{
 \item \strong{x}
 \item \strong{y}
+\item \strong{dim}
+\item \strong{type}
+\item \strong{simplex_id}
 \item alpha
 \item color
 \item fill
@@ -118,7 +125,10 @@ aesthetics are in bold):
 \section{Computed variables}{
 
 
-\describe{ \item{dim}{The dimension of the corresponding simplex}}
+\describe{ \item{dim}{The dimension of the corresponding simplex, an ordered factor}}
+\describe{ \item{type}{The type of simplex represented by each row, one of:
+\code{"simplex"}, \code{"simplex_one"}, \code{"zero_skeleton"}, \code{"one_skeleton"}.}}
+\describe{ \item{simplex_id}{A set of unique ids for each simplex, for each \code{type}}}
 }
 
 \examples{

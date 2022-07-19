@@ -10,19 +10,8 @@
 \alias{stat_barcode}
 \alias{GeomBarcode}
 \alias{geom_barcode}
-\title{Title}
-\format{
-An object of class \code{StatPersistence} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
-
-An object of class \code{GeomPersistence} (inherits from \code{GeomPoint}, \code{Geom}, \code{ggproto}, \code{gg}) of length 2.
-
-An object of class \code{StatBarcode} (inherits from \code{StatPersistence}, \code{Stat}, \code{ggproto}, \code{gg}) of length 2.
-
-An object of class \code{GeomBarcode} (inherits from \code{GeomSegment}, \code{Geom}, \code{ggproto}, \code{gg}) of length 2.
-}
+\title{Persistence homologies from point clouds}
 \usage{
-StatPersistence
-
 stat_persistence(
   mapping = NULL,
   data = NULL,
@@ -36,8 +25,6 @@ stat_persistence(
   inherit.aes = TRUE
 )
 
-GeomPersistence
-
 geom_persistence(
   mapping = NULL,
   data = NULL,
@@ -48,8 +35,6 @@ geom_persistence(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-StatBarcode
 
 stat_barcode(
   mapping = NULL,
@@ -63,8 +48,6 @@ stat_barcode(
   show.legend = NA,
   inherit.aes = TRUE
 )
-
-GeomBarcode
 
 geom_barcode(
   mapping = NULL,
@@ -108,7 +91,12 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 
-\item{point_cloud}{}
+\item{k}{Calculate features up to dimension k}
+
+\item{point_cloud}{Optional, \code{data.frame} or \code{matrix} with point cloud data
+used to calculate persitence homology. Alternatively, multiple data sets
+can be visualized by providing mapping a list column to the \code{point_data}
+aesthetic (see examples).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
@@ -129,23 +117,33 @@ layer, as a string.}
 }
 \description{
 Compute persistence homologies and plot as barcode charts and persistence diagrams.
-Accepts either a singular point cloud of arbitrary dimension via the \code{point_cloud} argument
-or several, via the \code{point_data} aesthetic mapping.
+Accepts either a single point cloud of arbitrary dimension via the \code{point_cloud} argument
+or multiple data sets via the \code{point_data} aesthetic mapping.
 }
 \section{Aesthetics}{
- geom_hdr understands the following aesthetics (required
-aesthetics are in bold):
+ \code{geom_persistence} understands the following aesthetics (required aesthetics are in bold):
 \itemize{
+\item \strong{x}
+\item \strong{y}
+\item point_data
+\item alpha
+\item color
+\item group
+\item size
+}
+
+\code{geom_barcode} understands the following aesthetics:
+\itemize{
+\item \strong{x}
+\item \strong{y}
+\item \strong{xend}
+\item \strong{yend}
 \item point_data
 \item alpha
 \item color
 \item group
 \item linetype
 \item size
-\item x
-\item y
-\item xend
-\item yend
 }
 }
 
@@ -178,6 +176,7 @@ ggplot() +
   geom_abline(intercept = 0, slope = 1) +
   coord_fixed() +
   scale_color_viridis_d(end = .6)
+
 
 # Visualizing multiple groups together
 # making use of point_data aesthetic mapping

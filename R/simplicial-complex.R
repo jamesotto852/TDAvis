@@ -1,12 +1,15 @@
 #' Simplicial complexes from 2-d point clouds
 #'
-#' Compute and plot simplicicial complexes for a specified radius or diameter...
+#' Compute and plot simplicicial complexes for a specified radius or diameter.
 #'
 #' @section Aesthetics: geom_hdr understands the following aesthetics (required
 #'   aesthetics are in bold):
 #'
 #'   - **x**
 #'   - **y**
+#'   - **dim**
+#'   - **type**
+#'   - **simplex_id**
 #'   - alpha
 #'   - color
 #'   - fill
@@ -16,17 +19,21 @@
 #'
 #' @section Computed variables:
 #'
-#'   \describe{ \item{dim}{The dimension of the corresponding simplex}}
+#'   \describe{ \item{dim}{The dimension of the corresponding simplex, an ordered factor}}
+#'   \describe{ \item{type}{The type of simplex represented by each row, one of:
+#'   `"simplex"`, `"simplex_one"`, `"zero_skeleton"`, `"one_skeleton"`.}}
+#'   \describe{ \item{simplex_id}{A set of unique ids for each simplex, for each `type`}}
 #'
 #' @inheritParams ggplot2::geom_point
 #' @inheritParams ggplot2::stat_identity
-#' @param radius,diameter
-#' @param k
-#' @param complex
-#' @param zero_skeleton
-#' @param one_skeleton
-#' @param simplexes
-#' @param simplex_boundary
+#' @param radius,diameter The radius or diameter used to construct the simplicial complex
+#' @param k The maximal dimension
+#' @param complex The type of complex to compute (currently, only `"Rips"` is implemented)
+#' @param zero_skeleton Should the 0-skeleton be plotted (as points)?
+#' @param one_skeleton Should the 1-skeleton be plotted (as line segments)?
+#' @param simplexes Should the >0-simplexes corresponding to the maximal complex
+#' be plotted (as polygons and line segments)?
+#' @param simplex_boundary Should the boundaries of polygons representing the simplexes be drawn?
 #'
 #' @name geom_simplicial_complex
 #' @rdname geom_simplicial_complex
@@ -75,6 +82,8 @@ NULL
 
 
 #' @rdname geom_simplicial_complex
+#' @format NULL
+#' @usage NULL
 #' @export
 StatSimplicialComplex <-  ggproto(
   "StatSimplicialComplex", Stat,
@@ -83,7 +92,6 @@ StatSimplicialComplex <-  ggproto(
 
   # Alternatively, could assign fill = after_stat(dim)
   default_aes = aes(alpha = after_stat(dim)),
-  # need to set other aesthetics at the Geom level
 
   compute_group = function(data, scales,
                            radius = NULL, diameter = NULL, k = 10, complex = "Rips") {
@@ -111,7 +119,7 @@ StatSimplicialComplex <-  ggproto(
     zero_skeleton <- data
 
     # fill in irrelevant computed values
-    zero_skeleton$simplex_id <- NA
+    zero_skeleton$simplex_id <- 1:nrow(zero_skeleton)
     zero_skeleton$dim <- NA
     zero_skeleton$type <- "zero_skeleton"
 
@@ -228,6 +236,8 @@ stat_simplicial_complex <- function(mapping = NULL, data = NULL, geom = "Simplic
 
 
 #' @rdname geom_simplicial_complex
+#' @format NULL
+#' @usage NULL
 #' @export
 GeomSimplicialComplex <- ggproto("GeomSimplicialComplex", Geom,
 
@@ -237,7 +247,7 @@ GeomSimplicialComplex <- ggproto("GeomSimplicialComplex", Geom,
 
     n <- nrow(data)
 
-    if (n == 1) return(zeroGrob())
+    if (n == 0) return(zeroGrob())
 
 
     # Similar to GeomPolygon,
@@ -268,7 +278,7 @@ GeomSimplicialComplex <- ggproto("GeomSimplicialComplex", Geom,
       # Currently, can't adjust alpha of zero- and one-skeleton
       # If overplotting is an issue, set one_skeleton = FALSE
       # (Similar to geom_density)
-      grobs$simplex_one_data <- grid::segmentsGrob(
+      grobs$simplex_one <- grid::segmentsGrob(
         simplex_one_data$x, simplex_one_data$y,
         simplex_one_data$xend, simplex_one_data$yend,
         default.units = "native",
@@ -378,7 +388,7 @@ GeomSimplicialComplex <- ggproto("GeomSimplicialComplex", Geom,
                     linewidth = 0.5, linetype = 1,
                     shape = 21, size = 1.5, stroke = .5),
 
-  required_aes = c("x", "y"),
+  required_aes = c("x", "y", "simplex_id", "dim", "type"),
 
   draw_key = draw_key_simplex,
 

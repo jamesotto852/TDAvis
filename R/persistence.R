@@ -1,22 +1,30 @@
-#' Title
+#' Persistence homologies from point clouds
 #'
 #' Compute persistence homologies and plot as barcode charts and persistence diagrams.
-#' Accepts either a singular point cloud of arbitrary dimension via the `point_cloud` argument
-#' or several, via the `point_data` aesthetic mapping.
+#' Accepts either a single point cloud of arbitrary dimension via the `point_cloud` argument
+#' or multiple data sets via the `point_data` aesthetic mapping.
 #'
-#' @section Aesthetics: geom_hdr understands the following aesthetics (required
-#'   aesthetics are in bold):
+#' @section Aesthetics: `geom_persistence` understands the following aesthetics (required aesthetics are in bold):
+#'   - **x**
+#'   - **y**
+#'   - point_data
+#'   - alpha
+#'   - color
+#'   - group
+#'   - size
 #'
+#'   `geom_barcode` understands the following aesthetics:
+#'
+#'   - **x**
+#'   - **y**
+#'   - **xend**
+#'   - **yend**
 #'   - point_data
 #'   - alpha
 #'   - color
 #'   - group
 #'   - linetype
 #'   - size
-#'   - x
-#'   - y
-#'   - xend
-#'   - yend
 #'
 #' @section Computed variables:
 #'
@@ -27,8 +35,11 @@
 #'
 #' @inheritParams ggplot2::geom_point
 #' @inheritParams ggplot2::stat_identity
-#' @param k
-#' @param point_cloud
+#' @param k Calculate features up to dimension k
+#' @param point_cloud Optional, `data.frame` or `matrix` with point cloud data
+#' used to calculate persitence homology. Alternatively, multiple data sets
+#' can be visualized by providing mapping a list column to the `point_data`
+#' aesthetic (see examples).
 #'
 #' @name geom_persistence
 #' @rdname geom_persistence
@@ -54,6 +65,7 @@
 #'   geom_abline(intercept = 0, slope = 1) +
 #'   coord_fixed() +
 #'   scale_color_viridis_d(end = .6)
+#'
 #'
 #' # Visualizing multiple groups together
 #' # making use of point_data aesthetic mapping
@@ -91,6 +103,8 @@
 NULL
 
 #' @rdname geom_persistence
+#' @format NULL
+#' @usage NULL
 #' @export
 StatPersistence <-  ggproto(
   "StatPersistence", Stat,
@@ -198,9 +212,12 @@ stat_persistence <- function(mapping = NULL, data = NULL,
 
 
 #' @rdname geom_persistence
+#' @format NULL
+#' @usage NULL
 #' @export
 GeomPersistence <-  ggproto(
   "GeomPersistence", GeomPoint,
+  required_aes = c("x", "y"),
   optional_aes = c("point_data")
 )
 
@@ -238,6 +255,8 @@ geom_persistence <- function(mapping = NULL, data = NULL,
 # inherits computations from StatPersistence
 
 #' @rdname geom_persistence
+#' @format NULL
+#' @usage NULL
 #' @export
 StatBarcode <-  ggproto(
   "StatBarcode", StatPersistence,
@@ -281,9 +300,12 @@ stat_barcode <- function(mapping = NULL, data = NULL,
 
 
 #' @rdname geom_persistence
+#' @format NULL
+#' @usage NULL
 #' @export
 GeomBarcode <-  ggproto(
   "GeomBarcode", GeomSegment,
+  required_aes = c("x", "y", "xend", "yend"),
   optional_aes = c("point_data")
 )
 
