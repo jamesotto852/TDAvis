@@ -249,18 +249,32 @@ GeomSimplicialComplex <- ggproto("GeomSimplicialComplex", Geom,
 
     if (n == 0) return(zeroGrob())
 
+    # Munching happens at the group level,
+    # need to reconsider how to deal w/ transforms
+    if (FALSE) {
 
-    # Similar to GeomPolygon,
+      munched <- coord_munch(coord, data, panel_params)
 
-    munched <- coord_munch(coord, data, panel_params)
+      # Sort by simplex_id to make sure that colors, fill, etc. come in same order
+      munched <- munched[order(munched$simplex_id),]
 
-    # Sort by simplex_id to make sure that colors, fill, etc. come in same order
-    munched <- munched[order(munched$simplex_id),]
+      zero_skeleton_data <- munched[munched$type == "zero_skeleton",]
+      one_skeleton_data <- munched[munched$type == "one_skeleton",]
+      simplex_data <- munched[munched$type == "simplex",]
+      simplex_one_data <- munched[munched$type == "simplex_one",]
 
-    zero_skeleton_data <- munched[munched$type == "zero_skeleton",]
-    one_skeleton_data <- munched[munched$type == "one_skeleton",]
-    simplex_data <- munched[munched$type == "simplex",]
-    simplex_one_data <- munched[munched$type == "simplex_one",]
+    } else {
+
+      data <- coord$transform(data, panel_params)
+
+      data <- data[order(data$simplex_id),]
+
+      zero_skeleton_data <- data[data$type == "zero_skeleton",]
+      one_skeleton_data <- data[data$type == "one_skeleton",]
+      simplex_data <- data[data$type == "simplex",]
+      simplex_one_data <- data[data$type == "simplex_one",]
+
+    }
 
 
     # List to hold various grobs (polygons, linesegments, points)
