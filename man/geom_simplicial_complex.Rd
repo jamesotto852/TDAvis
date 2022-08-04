@@ -103,6 +103,14 @@ be plotted (as polygons and line segments)?}
 }
 \description{
 Compute and plot simplicicial complexes for a specified radius or diameter.
+Currently, only the Rips complex is implemented (\code{complex = "Rips"}).
+}
+\details{
+Note: the procedure for plotting the complexes can be slow, especially for
+when the choice of \code{radius} results in many high-dimensional complexes.
+We recommend starting with small values of \code{radius} to avoid long computations.
+Alternatively, the maximal dimension of the simplexes can be set to a low value
+(e.g. \code{k = 1}).
 }
 \section{Aesthetics}{
  geom_hdr understands the following aesthetics (required

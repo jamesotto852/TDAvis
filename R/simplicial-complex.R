@@ -1,6 +1,14 @@
 #' Simplicial complexes from 2-d point clouds
 #'
 #' Compute and plot simplicicial complexes for a specified radius or diameter.
+#' Currently, only the Rips complex is implemented (`complex = "Rips"`).
+#'
+#' Note: the procedure for plotting the complexes can be slow, especially for
+#' when the choice of `radius` results in many high-dimensional complexes.
+#' We recommend starting with small values of `radius` to avoid long computations.
+#' Alternatively, the maximal dimension of the simplexes can be set to a low value
+#' (e.g. `k = 1`).
+#'
 #'
 #' @section Aesthetics: geom_hdr understands the following aesthetics (required
 #'   aesthetics are in bold):
