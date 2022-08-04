@@ -103,6 +103,14 @@ be plotted (as polygons and line segments)?}
 }
 \description{
 Compute and plot simplicicial complexes for a specified radius or diameter.
+Currently, only the Rips complex is implemented (\code{complex = "Rips"}).
+}
+\details{
+Note: the procedure for plotting the complexes can be slow, especially for
+when the choice of \code{radius} results in many high-dimensional complexes.
+We recommend starting with small values of \code{radius} to avoid long computations.
+Alternatively, the maximal dimension of the simplexes can be set to a low value
+(e.g. \code{k = 1}).
 }
 \section{Aesthetics}{
  geom_hdr understands the following aesthetics (required
@@ -133,13 +141,12 @@ aesthetics are in bold):
 
 \examples{
 
-# generate a noisy circle
-n <- 36; sd <- .2
-set.seed(0)
-t <- stats::runif(n = n, min = 0, max = 2*pi)
+set.seed(1)
+
+s <- seq(0, 2*pi, length.out = 40)
 df <- data.frame(
-  x = cos(t) + stats::rnorm(n = n, mean = 0, sd = sd),
-  y = sin(t) + stats::rnorm(n = n, mean = 0, sd = sd)
+  x = cos(s) + rnorm(40, 0, .1),
+  y = sin(s) + rnorm(40, 0, .1)
 )
 
 # default, visualizing dim w/ alpha:
@@ -155,12 +162,10 @@ ggplot(df, aes(x, y)) +
 
 
 # Visualizing multiple groups together
-n <- 72; sd <- .2
-set.seed(0)
-t <- stats::runif(n = n, min = 0, max = 2*pi)
+s <- c(s, s)
 df_mix <- data.frame(
-  x = cos(t) + stats::rnorm(n = n, mean = 0, sd = sd),
-  y = sin(t) + stats::rnorm(n = n, mean = 0, sd = sd)
+  x = cos(s) + rnorm(80, 0, .1),
+  y = sin(s) + rnorm(80, 0, .1)
 )
 
 df_mix$x <- df_mix$x + rep(c(-2, 2), length.out = n)

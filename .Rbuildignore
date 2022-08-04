@@ -1,2 +1,5 @@
 ^TDAvis\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$
+^README-.*\.gif$
+^\.github$

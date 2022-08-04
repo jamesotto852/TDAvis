@@ -47,13 +47,12 @@
 #'
 #' @examples
 #'
-#' # generate a noisy circle
-#' n <- 36; sd <- .2
-#' set.seed(0)
-#' t <- stats::runif(n = n, min = 0, max = 2*pi)
+#' set.seed(1)
+#'
+#' s <- seq(0, 2*pi, length.out = 40)
 #' df <- data.frame(
-#'   x = cos(t) + stats::rnorm(n = n, mean = 0, sd = sd),
-#'   y = sin(t) + stats::rnorm(n = n, mean = 0, sd = sd)
+#'   x = cos(s) + rnorm(40, 0, .1),
+#'   y = sin(s) + rnorm(40, 0, .1)
 #' )
 #'
 #' ggplot() +
@@ -69,12 +68,10 @@
 #'
 #' # Visualizing multiple groups together
 #' # making use of point_data aesthetic mapping
-#' n <- 72; sd <- .2
-#' set.seed(0)
-#' t <- stats::runif(n = n, min = 0, max = 2*pi)
+#' s <- c(s, s)
 #' df_mix <- data.frame(
-#'   x = cos(t) + stats::rnorm(n = n, mean = 0, sd = sd),
-#'   y = sin(t) + stats::rnorm(n = n, mean = 0, sd = sd)
+#'   x = cos(s) + rnorm(80, 0, .1),
+#'   y = sin(s) + rnorm(80, 0, .1)
 #' )
 #'
 #' df_mix$x <- df_mix$x + rep(c(-2, 2), length.out = n)
