@@ -78,8 +78,8 @@
 #'   y = sin(s) + rnorm(80, 0, .1)
 #' )
 #'
-#' df_mix$x <- df_mix$x + rep(c(-2, 2), length.out = n)
-#' df_mix$lab <- rep(c("a", "b"), length.out = n)
+#' df_mix$x <- df_mix$x + rep(c(-2, 2), length.out = 80)
+#' df_mix$lab <- rep(c("a", "b"), length.out = 80)
 #'
 #' ggplot(df_mix, aes(x, y, fill = lab)) +
 #'   geom_simplicial_complex(radius = .4)

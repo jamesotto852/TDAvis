@@ -74,8 +74,8 @@
 #'   y = sin(s) + rnorm(80, 0, .1)
 #' )
 #'
-#' df_mix$x <- df_mix$x + rep(c(-2, 2), length.out = n)
-#' df_mix$lab <- rep(c("a", "b"), length.out = n)
+#' df_mix$x <- df_mix$x + rep(c(-2, 2), length.out = 80)
+#' df_mix$lab <- rep(c("a", "b"), length.out = 80)
 #'
 #' df_nested <- dplyr::group_by(df_mix, lab)
 #' df_nested <- tidyr::nest(df_nested)
