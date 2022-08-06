@@ -135,7 +135,7 @@ ggplot(df_groups, aes(x, y, fill = lab)) +
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 It is also possible to use the `fill` aesthetic to visualize the simplex
-dimensions, it just requires faceting:
+dimensions. Typically, faceting the resulting plot is a good idea:
 
 ``` r
 ggplot(df_groups, aes(x, y)) +
@@ -167,7 +167,7 @@ homology](https://en.wikipedia.org/wiki/Persistent_homology)!
 
 In the above animation, we see the structure of the Rips complexes
 change as the radii increase. For example, in the top right plot we see
-two disconnected components last a couple of seconds. In the bottom
+two disconnected components that last a couple of seconds. In the bottom
 right plot, the central hole is present for almost the entire animation.
 In the first plot, we see quite a few short-lived holes, but overall
 there are no features that persist for more than a few frames.
@@ -221,9 +221,8 @@ data via aesthetic mappings: the `point_data` aesthetic.
 
 Both `geom_barcode()` and `geom_persistence()` accept the optional
 `point_data` aesthetic. This aesthetic is different from the typical
-**ggplot2** aesthetics—it needs to be pointing at a list column which
-contains rows of `data.frames`. For example, see how we construct
-`df_nested`:
+**ggplot2** aesthetics—it needs to be pointing at a list column with
+`data.frame` elements. For example, see how we construct `df_nested`:
 
 ``` r
 library("tidyverse")
@@ -242,8 +241,8 @@ df_nested
 #> 2 b     <tibble [50 × 2]>
 ```
 
-This allows for faceting based, see below how we plot barcode charts for
-each group in `df_group`:
+This approach allows for easy faceting. See below how we plot barcode
+charts for each group in `df_group`:
 
 ``` r
 ggplot(df_nested) +
@@ -254,7 +253,7 @@ ggplot(df_nested) +
 
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
-And similarly, we plot multiple persistence diagrams:
+Similarly, we can plot multiple persistence diagrams:
 
 ``` r
 ggplot(df_nested) +
@@ -315,31 +314,7 @@ set.seed(1)
 df_lissajous <- rvnorm(500, lissajous(3, 3,  0, 0), .014, "tibble", chains = 8) |>
   select(x, y) |>
   slice_sample(n = 500)
-#> Compiling model... Trying to compile a simple C file
-#> Running /usr/lib/R/bin/R CMD SHLIB foo.c
-#> gcc -I"/usr/share/R/include" -DNDEBUG   -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/Rcpp/include/"  -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/"  -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/unsupported"  -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/BH/include" -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/StanHeaders/include/src/"  -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/StanHeaders/include/"  -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppParallel/include/"  -I"/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DBOOST_NO_AUTO_PTR  -include '/home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1      -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-asoVQd/r-base-4.2.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c foo.c -o foo.o
-#> In file included from /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/Eigen/Core:88,
-#>                  from /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/Eigen/Dense:1,
-#>                  from /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-#>                  from <command-line>:
-#> /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:1: error: unknown type name ‘namespace’
-#>   628 | namespace Eigen {
-#>       | ^~~~~~~~~
-#> /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:17: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
-#>   628 | namespace Eigen {
-#>       |                 ^
-#> In file included from /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/Eigen/Dense:1,
-#>                  from /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-#>                  from <command-line>:
-#> /home/ubuntu/R/x86_64-pc-linux-gnu-library/4.2/RcppEigen/include/Eigen/Core:96:10: fatal error: complex: No such file or directory
-#>    96 | #include <complex>
-#>       |          ^~~~~~~~~
-#> compilation terminated.
-#> make: *** [/usr/lib/R/etc/Makeconf:168: foo.o] Error 1
-#> done.
-#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-#> Running the chains for more iterations may help. See
-#> https://mc-stan.org/misc/warnings.html#bulk-ess
+#> Compiling model... done.
 
 p_scatterplot <- 
   ggplot(df_lissajous, aes(x, y)) +
@@ -348,7 +323,9 @@ p_scatterplot <-
 
 p_complex <- 
   ggplot(df_lissajous, aes(x, y)) +
-  geom_simplicial_complex(aes(fill = after_stat(dim)), alpha = .4, diameter = .12) +
+  geom_simplicial_complex(
+    aes(fill = after_stat(dim)), alpha = .4,
+    diameter = .12, zero_skeleton = FALSE) +
   coord_fixed()
 
 p_scatterplot + p_complex
