@@ -3,3 +3,4 @@
 ^README\.Rmd$
 ^README-.*\.gif$
 ^\.github$
+^LICENSE\.md$
