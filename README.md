@@ -10,7 +10,7 @@
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](Redirect-URL)
 <!-- badges: end -->
 
-**TDAvis** extends [**ggplot2**](https://github.com/tidyverse/ggplot2),
+**TDAvis** extends [**ggplot2**](https://github.com/tidyverse/ggplot2)
 for visualizing common tools from [Topological Data
 Analysis](https://en.wikipedia.org/wiki/Topological_data_analysis)
 (TDA). The visualization of Rips complexes is implemented with
