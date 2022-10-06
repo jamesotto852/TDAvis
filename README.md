@@ -18,6 +18,8 @@ Analysis](https://en.wikipedia.org/wiki/Topological_data_analysis)
 via either barcode charts or persistence diagrams with `geom_barcode()`
 or `geom_persistence()`, respectively.
 
+**Note**: We are currently working on combining **TDAvis**' capabilities with [**ggtda**](https://github.com/tdaverse/ggtda), stay tuned for updates!
+
 ## Installation
 
 You can install the development version of TDAvis from

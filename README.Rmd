@@ -37,6 +37,8 @@ The visualization of Rips complexes is implemented with `geom_simplicial_complex
 Persistence homologies can be visualized via either barcode charts or persistence diagrams with `geom_barcode()` or `geom_persistence()`, respectively.
 
 
+**Note**: We are currently working on combining **TDAvis**' capabilities with [**ggtda**](https://github.com/tdaverse/ggtda), stay tuned for updates!
+
 ## Installation
 
 You can install the development version of TDAvis from [GitHub](https://github.com/) with:
