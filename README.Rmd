@@ -31,7 +31,7 @@ knitr::opts_chunk$set(
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](<Redirect-URL>)
 <!-- badges: end -->
 
-**TDAvis** extends [**ggplot2**](https://github.com/tidyverse/ggplot2), 
+**TDAvis** extends [**ggplot2**](https://github.com/tidyverse/ggplot2)
 for visualizing common tools from [Topological Data Analysis](https://en.wikipedia.org/wiki/Topological_data_analysis) (TDA).
 The visualization of Rips complexes is implemented with `geom_simplicial_complex()`.
 Persistence homologies can be visualized via either barcode charts or persistence diagrams with `geom_barcode()` or `geom_persistence()`, respectively.
@@ -143,8 +143,8 @@ ggplot(df_groups, aes(x, y, fill = lab)) +
   coord_fixed()
 ```
 
-It is also possible to use the `fill` aesthetic to visualize the simplex dimensions,
-it just requires faceting:
+It is also possible to use the `fill` aesthetic to visualize the simplex dimensions.
+Typically, faceting the resulting plot is a good idea:
 
 ```{r, fig.height=7}
 ggplot(df_groups, aes(x, y)) +
@@ -171,7 +171,7 @@ This is what motivates the tools of [persistent homology](https://en.wikipedia.o
 ## Perstistent Homology 
 
 In the above animation, we see the structure of the Rips complexes change as the radii increase.
-For example, in the top right plot we see two disconnected components last a couple of seconds.
+For example, in the top right plot we see two disconnected components that last a couple of seconds.
 In the bottom right plot, the central hole is present for almost the entire animation.
 In the first plot, we see quite a few short-lived holes, but overall there are no features that persist for more than a few frames.
 
@@ -213,7 +213,7 @@ However, there is another way to supply data via aesthetic mappings: the `point_
 
 Both `geom_barcode()` and `geom_persistence()` accept the optional `point_data` aesthetic.
 This aesthetic is different from the typical **ggplot2** aesthetics---it
-needs to be pointing at a list column which contains rows of `data.frames`.
+needs to be pointing at a list column with `data.frame` elements.
 For example, see how we construct `df_nested`:
 
 ```{r}
@@ -227,7 +227,8 @@ df_nested <-
 df_nested
 ```
 
-This allows for faceting based, see below how we plot barcode charts for each group in `df_group`:
+This approach allows for easy faceting.
+See below how we plot barcode charts for each group in `df_group`:
 
 ```{r, fig.height=7}
 ggplot(df_nested) +
@@ -236,7 +237,7 @@ ggplot(df_nested) +
   scale_color_viridis_d(end = .7)
 ```
 
-And similarly, we plot multiple persistence diagrams:
+Similarly, we can plot multiple persistence diagrams:
 
 ```{r}
 ggplot(df_nested) +
@@ -280,7 +281,7 @@ df_groups <-
 The variety we have been considering is relatively simple.
 For a more interesting example, we can consider a polynomial whose variety is a [Lissajous curve](https://en.wikipedia.org/wiki/Lissajous_curve):
 
-```{r, cache = TRUE}
+```{r, results = FALSE, warning = FALSE, cache = TRUE}
 library("patchwork")
 set.seed(1)
 
@@ -295,7 +296,9 @@ p_scatterplot <-
 
 p_complex <- 
   ggplot(df_lissajous, aes(x, y)) +
-  geom_simplicial_complex(aes(fill = after_stat(dim)), alpha = .4, diameter = .12) +
+  geom_simplicial_complex(
+    aes(fill = after_stat(dim)), alpha = .4,
+    diameter = .12, zero_skeleton = FALSE) +
   coord_fixed()
 
 p_scatterplot + p_complex
